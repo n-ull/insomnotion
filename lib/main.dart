@@ -22,20 +22,22 @@ class _MainAppState extends State<MainApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                examplePage.title,
-                style: const TextStyle(fontSize: 32),
-              ),
-              ...content
-            ],
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  examplePage.title,
+                  style: const TextStyle(fontSize: 32),
+                ),
+                ...content
+              ],
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 
@@ -46,23 +48,22 @@ class _MainAppState extends State<MainApp> {
   }
 
   getContent() {
-    var index = 0;
     for (final line in examplePage.content) {
       content.add(TextField(
         controller: TextEditingController(text: line),
-        onSubmitted: (value) {
-          setState(() { content.insert(index, TextField(
-            controller: TextEditingController(text: "Nueva: ${value}")
-          )); });
-        },
+        onSubmitted: getNewLine,
       ));
-      index++;
     }
-    content.add(TextField(onSubmitted: (value) {
-      setState(() { content.insert(content.length, TextField(
-          controller: TextEditingController(text: "Nueva: ${value}")
-      )); });
-    }));
+    content.add(TextField(onSubmitted: getNewLine));
     return content;
+  }
+
+  getNewLine(value) {
+    setState(() {
+      content.add(TextField(
+        controller: TextEditingController(text: "Nueva línea"),
+        onSubmitted: getNewLine,
+      ));
+    });
   }
 }
