@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:insomnotion/models/page.dart';
 
-var examplePage = InsomniacPage("id", "Título de la página");
+var examplePage = InsomniacPage("id", "Título de la página")..content.add("a");
 
 void main() {
   runApp(const MainApp());
@@ -15,6 +15,8 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  List<TextField> content = [];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,11 +31,33 @@ class _MainAppState extends State<MainApp> {
                 examplePage.title,
                 style: const TextStyle(fontSize: 32),
               ),
-              const TextField()
+              ...content
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  initState() {
+    content = getContent();
+    super.initState();
+  }
+
+  getContent() {
+    for (final line in examplePage.content) {
+      content.add(TextField(
+        controller: TextEditingController(text: line),
+      ));
+    }
+    content.add(TextField(onSubmitted: (value) {
+      setState(() {
+        content.add(
+            TextField(controller: TextEditingController(text: "Nueva línea")));
+      });
+      content.insert(1, TextField(controller: TextEditingController(text: "Nueva línea")));
+    }));
+    return content;
   }
 }
