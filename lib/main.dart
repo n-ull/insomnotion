@@ -46,17 +46,22 @@ class _MainAppState extends State<MainApp> {
   }
 
   getContent() {
+    var index = 0;
     for (final line in examplePage.content) {
       content.add(TextField(
         controller: TextEditingController(text: line),
+        onSubmitted: (value) {
+          setState(() { content.insert(index, TextField(
+            controller: TextEditingController(text: "Nueva: ${value}")
+          )); });
+        },
       ));
+      index++;
     }
     content.add(TextField(onSubmitted: (value) {
-      setState(() {
-        content.add(
-            TextField(controller: TextEditingController(text: "Nueva línea")));
-      });
-      content.insert(1, TextField(controller: TextEditingController(text: "Nueva línea")));
+      setState(() { content.insert(content.length, TextField(
+          controller: TextEditingController(text: "Nueva: ${value}")
+      )); });
     }));
     return content;
   }
