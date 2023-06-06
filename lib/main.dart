@@ -59,9 +59,24 @@ class _MainAppState extends State<MainApp> {
   }
 
   getNewLine(value) {
+    examplePage.content = [];
+    var i = 0;
+    var index = 0;
+    for (final row in content) {
+      if (i > examplePage.content.length) {
+        examplePage.content[i] = row.controller?.text ?? "Empty";
+      } else {
+        examplePage.content.add(row.controller?.text ?? "Empty");
+      }
+      // TODO: Correctly fetch index instead of considering text as unique
+      if ((row.controller?.text ?? "") == value) {
+        index = i + 1;
+      }
+      i++;
+    }
     setState(() {
-      content.add(TextField(
-        controller: TextEditingController(text: "Nueva línea"),
+      content.insert(index, TextField(
+        controller: TextEditingController(text: "Nueva línea $index"),
         onSubmitted: getNewLine,
       ));
     });
